@@ -1,0 +1,120 @@
+    private static final boolean LEFT = true;
+    private static final boolean RIGHT = false;
+
+    private int score1 = -1;
+    private int score2 = 0;
+
+    private int x;
+    private int y;
+    private int DIM = 20;
+
+    private int dx;
+    private int dy;
+    private boolean direction;
+
+    public Ball() {
+        direction = RIGHT;
+        reset();
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getDIM() {
+        return DIM;
+    }
+
+    public int getScore1() {
+        return score1;
+    }
+
+    public int getScore2() {
+        return score2;
+    }
+
+    public void reset() {
+        y = 150;
+        dy = 1;
+        if(direction == RIGHT) {
+            x = 326;
+            dx = 2;
+        }
+        else {
+            x = 626;
+            dx = -2;
+        }
+    }
+
+    public void move() {
+        x += dx;
+        y += dy;
+    }
+
+    public void collision(int pad1y, int pad2y) {
+        //if collided top or bottom wall
+        if(y <= 0 || y >= 600) {
+            dy = -dy;
+        }
+
+        //if collided with paddle
+        if(x == 26) {
+            distCalc(pad1y);
+        }
+        else if(x == 896) {
+            distCalc(pad2y);
+        }
+
+        //if dead
+        if(x >= 952) {
+            score1++;
+            direction = LEFT;
+            reset();
+        }
+        else if(x <= -30) {
+            score2++;
+            direction = RIGHT;
+            reset();
+        }
+    }
+
+    private void distCalc(int py) {
+        if((y + 30) >= py && y <= py + 100) {
+            int acc = (y+15)-(py+50);
+            dy = acc/16;
+            if(acc >= 50 || acc <= -50) {
+                if(direction == RIGHT) {
+                    dx = -3;
+                    direction = LEFT;
+                }
+                else {
+                    dx = 3;
+                    direction = RIGHT;
+                }
+            }
+            else if(acc >= 20 || acc <= -20) {
+                if(direction == RIGHT) {
+                    dx = -2;
+                    direction = LEFT;
+                }
+                else {
+                    dx = 2;
+                    direction = RIGHT;
+                }
+            }
+            else {
+                if(direction == RIGHT) {
+                    dx = -1;
+                    direction = LEFT;
+                }
+                else {
+                    dx = 1;
+                    direction = RIGHT;
+                }
+            }
+        }
+    }
